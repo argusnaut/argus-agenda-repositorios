@@ -1,7 +1,7 @@
 package br.argus.agenda.repositorios.impl;
 
+import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -9,16 +9,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.argus.agenda.entidades.Contato;
+import br.argus.agenda.fabricas.ConnectionFactoryJdbc;
 import br.argus.agenda.repositorios.interfaces.AgendaRepositorio;
 
 public class ContatoRepositorioJdbc implements AgendaRepositorio<Contato> {
 
 	@Override
-	public List<Contato> selecionar() throws SQLException {
+	public List<Contato> selecionar() throws SQLException, IOException {
 		Connection conexao = null;
 		List<Contato> contatos = new ArrayList<Contato>();
 		try {
-			conexao = DriverManager.getConnection("jdbc:mysql://localhost:3306/argus_jdbc", "argusnaut", "root123");
+			conexao = ConnectionFactoryJdbc.criarConnexao();
 			Statement comando = conexao.createStatement();
 			ResultSet rs = comando.executeQuery("SELECT * FROM contatos");
 			while (rs.next()) {
